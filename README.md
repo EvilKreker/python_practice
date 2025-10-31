@@ -10,10 +10,11 @@ The tests validate the behavior of the `/api/users/2` endpoint with the full CRU
 
 ##  Project Structure
 
-.
-├── conftest.py          # Pytest fixture for session/token setup and teardown
-├── test_api_reqres.py   # Main test file (GET, POST, PUT, DELETE tests)
-└── README.md            # Project documentation
+conftest.py          ## Pytest fixture for session/token setup and teardown
+
+test_api_reqres.py   ## Main test file (GET, POST, PUT, DELETE tests)
+
+README.md            ## Project documentation
 
 ---
 
