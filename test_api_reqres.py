@@ -4,7 +4,7 @@ import pytest
 def test_get_user_success(reqres_client):
     """
     GET should NOT require API key per requirement.
-    Asserts 200 and key fields in the response body.
+    Asserts 200 and key fields in the response body
     """
     s = reqres_client["session"]
     url = reqres_client["user_endpoint"]
@@ -34,7 +34,7 @@ def test_post_user_with_api_key(reqres_client, payload):
     """
     POST requires API key header.
     Since we're posting to /users/2 (per the requirement's endpoint structure),
-    we allow typical success codes and look for echoed or creation markers.
+    we allow typical success codes and look for echoed or creation markers
     """
     s = reqres_client["session"]
     url = reqres_client["user_endpoint"]
@@ -57,7 +57,7 @@ def test_post_user_with_api_key(reqres_client, payload):
 def test_put_user_with_api_key(reqres_client):
     """
     PUT requires API key header.
-    Assert 200-ish and presence of updatedAt; also echo of sent fields.
+    Assert 200-ish and presence of updatedAt; also echo of sent fields
     """
     s = reqres_client["session"]
     url = reqres_client["user_endpoint"]
@@ -78,7 +78,7 @@ def test_put_user_with_api_key(reqres_client):
 def test_delete_user_with_api_key(reqres_client):
     """
     DELETE requires API key header.
-    ReqRes typically returns 204 No Content for DELETE /users/2.
+    ReqRes typically returns 204 No Content for DELETE /users/2
     """
     s = reqres_client["session"]
     url = reqres_client["user_endpoint"]
@@ -90,3 +90,33 @@ def test_delete_user_with_api_key(reqres_client):
     # If 204, no body; if 200 from some gateways, body may be empty string or JSON
     content = resp.text.strip()
     assert content == "" or content == "{}" or content.startswith("{") is True or resp.status_code == 204
+
+
+def test_post_missing_api_key(reqres_client):
+    """
+    Negative test (401/403) — POST/PUT/DELETE without API key
+    """
+    s, url = reqres_client["session"], reqres_client["user_endpoint"]
+    resp = s.post(url, json={"name": "no-key"}, timeout=15)  # no headers
+    assert resp.status_code in (401, 403), f"Expected 401/403, got {resp.status_code}: {resp.text}"
+
+
+import time
+def test_get_user_perf(reqres_client):
+    """
+    Response time guard (simple perf contract)
+    """
+    s, url = reqres_client["session"], reqres_client["user_endpoint"]
+    t0 = time.perf_counter(); resp = s.get(url, timeout=15); dt = time.perf_counter() - t0
+    assert resp.status_code == 200
+    assert dt < 1.0, f"Slow response: {dt:.3f}s"
+
+
+EXPECTED_KEYS = {"id", "email", "first_name", "last_name", "avatar"}
+def test_get_user_shape(reqres_client):
+    """
+    Schema sanity (lightweight)
+    """
+    s, url = reqres_client["session"], reqres_client["user_endpoint"]
+    body = s.get(url, timeout=15).json()
+    assert set(body["data"]).issuperset(EXPECTED_KEYS)
