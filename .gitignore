@@ -1,0 +1,27 @@
+# Virtual environment
+venv/
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Pytest cache and reports
+.pytest_cache/
+.playwright-report/
+htmlcov/
+*.log
+
+# Environment files
+.env
+*.env
+
+# IDE / Editor settings
+.idea/
+.vscode/
+*.iml
+
+# OS-generated files
+.DS_Store
+Thumbs.db
