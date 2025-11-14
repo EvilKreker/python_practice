@@ -196,6 +196,7 @@ python_practice/
 │       └── test_login_failure.py
 │
 ├── venv/
+├── .gitignore
 ├── pytest.ini
 ├── requirements.txt
 └── README.md
@@ -210,10 +211,27 @@ NOTES
 - The Playwright fixture opens a Chromium browser context for each test.  
 - Virtual environment (venv/) must be excluded from Git.  
 
-.gitignore example:
+.gitignore overview
 -------------------
+Purpose: defines which files and folders Git should ignore (not track or commit).
+
+Location: place .gitignore in the project root (python_practice/.gitignore).
+
+Recommended contents:
 venv/
 __pycache__/
 *.pyc
 .pytest_cache/
-playwright-report/
+.playwright-report/
+htmlcov/
+*.log
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+If ignored files were already committed:
+git rm -r --cached venv .pytest_cache __pycache__
+git add .
+git commit -m "Add .gitignore and remove ignored files"
+git push
